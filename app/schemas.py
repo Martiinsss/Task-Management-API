@@ -1,6 +1,9 @@
 from typing import Optional
 from pydantic import BaseModel, EmailStr
 
+from app.models import TaskStatus
+
+
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
@@ -15,7 +18,7 @@ class UserResponse(BaseModel):
 class TaskCreate(BaseModel):
     title: str
     description: Optional[str] = None
-    owner_id: int
+    status: TaskStatus = TaskStatus.todo
 
 class TaskResponse(BaseModel):
     id: int

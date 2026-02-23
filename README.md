@@ -1,51 +1,73 @@
 # Task Management API
 
-A production-ready RESTful API for managing tasks, built using FastAPI and MariaDB.  
-This project demonstrates backend best practices including JWT authentication, relational database modeling, Docker containerization, and clean architecture principles.
+A secure backend REST API built with FastAPI for managing user-based tasks.
+The application implements JWT authentication, ownership validation, and structured service-based architecture.
 
-The API supports user registration, authentication, and full CRUD operations for task management, with secure access control and structured error handling.
+This project demonstrates backend engineering fundamentals including authentication flows, relational database modeling, and clean separation of concerns.
 
 
 ## Tech Stack
 
-- Python
+- Python 3.12
 - FastAPI
+- SQLAlchemy (ORM)
 - MariaDB
-- SQLAlchemy
 - JWT Authentication
-- Docker
-- Pytest
+- Pydantic
+- Uvicorn
 
 
 ## Features
 
-- User registration and authentication (JWT)
-- Secure password hashing
-- CRUD operations for tasks
-- Task filtering and pagination
-- Role-based access control
-- Structured error handling
-- Dockerized deployment
+- User registration
+- Secure login with JWT authentication
+- Protected routes
+- Task CRUD operations
+- Task ownership validation (users can only access their own tasks)
+- Enum-based status validation (todo / in_progress / done)
+- Environment-based configuration
 
 
 ## API Endpoints
 
-### Auth
-- POST /register
-- POST /login
+### Authentication
+- POST /register - Create a new user 
+- POST /login - Authenticate and receive JWT token
 
 ### Tasks
-- GET /tasks
-- POST /tasks
-- PUT /tasks/{id}
-- DELETE /tasks/{id}
+- GET /tasks - Retrieve authenticated user's tasks
+- POST /tasks - Create a new task
+- PUT /tasks/{id}/update - Update task (ownership potected)
+- DELETE /tasks/{id} - Delete task (ownership protected)
 
 
-## How to Run
+## How to Run Locally
 
-1. Clone the repository
-2. Create a virtual environment
-3. Install dependencies:
-   pip install -r requirements.txt
-4. Run the application:
-   uvicorn app.main:app --reload
+1. git clone <repository-url>
+2. cd Task-Management-API
+3. python -m venv .venv
+4. source .venv/bin/activate  # Windows: .venv\Scripts\activate
+5. pip install -r requirements.txt
+6. uvicorn app.main:app --reload
+   
+Swagger documentation available at:
+- http://127.0.0.1:8000/docs
+
+
+## Project Architecture
+The project follows a layered structure:
+
+- Routes -> HTTP layer
+- Services -> Business logic
+- Models -> Database structure
+- Schemas -> Data validation
+- Auth -> JWT handling
+
+This separation ensures maintainability and scalability.
+
+## Future Improvements
+
+- Pagination support
+- Automated testing with Pytest
+- Docker containerization
+- CI/CD integration
