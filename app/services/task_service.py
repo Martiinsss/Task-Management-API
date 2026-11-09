@@ -34,3 +34,21 @@ def remove_task(db: Session, task_id: int, current_user: models.User):
     return {"message": "Task deleted successfully"}
 
     return task
+
+def change_task_status(db: Session, task_id: int, new_status: models.TaskStatus, current_user: models.User):
+    task = db.query(models.Task).filter(models.Task.id == task_id).first()
+
+    if not task:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")
+
+    if task.owner_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to update this task"
+        )
+
+    task.status = new_status
+    db.commit()
+    db.refresh(task)
+
+    return task

@@ -30,9 +30,9 @@ def create_task(
 def get_all_tasks(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     return list_tasks(db, current_user.id)
 
-@router.patch("/tasks/{task_id}/update")
-def update_task_status(task_id: int, status: TaskStatus, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
-    return update_task_status(db, task_id, status, current_user.id)
+@router.patch("/{task_id}/update", response_model=TaskResponse)
+def update_status(task_id: int, status: TaskStatus, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    return change_task_status(db, task_id, status, current_user)
 
 @router.delete("/{task_id}")
 def delete_task(task_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
