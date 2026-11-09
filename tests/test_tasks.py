@@ -47,3 +47,35 @@ def test_delete_missing_task_returns_404(client, make_user):
     response = client.delete("/tasks/9999", headers=headers)
 
     assert response.status_code == 404
+
+def test_owner_can_update_task_status(client, make_user):
+    headers = make_user()
+    task_id = client.post("/tasks/", json={"title": "Ship it"}, headers=headers).json()["id"]
+
+    response = client.patch(
+        f"/tasks/{task_id}/update", params={"status": "completed"}, headers=headers
+    )
+
+    assert response.status_code == 200
+    assert response.json()["status"] == "completed"
+
+
+def test_user_cannot_update_other_users_task(client, make_user):
+    alice = make_user("alice@example.com")
+    bob = make_user("bob@example.com")
+    task_id = client.post("/tasks/", json={"title": "Alice's task"}, headers=alice).json()["id"]
+
+    response = client.patch(
+        f"/tasks/{task_id}/update", params={"status": "completed"}, headers=bob
+    )
+
+    assert response.status_code == 403
+
+
+def test_update_missing_task_returns_404(client, make_user):
+    headers = make_user()
+
+    response = client.patch("/tasks/9999/update", params={"status": "completed"}, headers=headers)
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Task not found"

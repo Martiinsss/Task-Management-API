@@ -24,6 +24,7 @@ class TaskResponse(BaseModel):
     id: int
     title: str
     description: Optional[str]
+    status: TaskStatus
     owner_id: int
 
     class Config:
